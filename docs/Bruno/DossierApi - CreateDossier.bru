@@ -1,0 +1,26 @@
+meta {
+  name: DossierApi - CreateDossier
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:7203/dossier
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{company_token}}
+}
+
+body:json {
+  {
+    "bsn": "{{bsn}}"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

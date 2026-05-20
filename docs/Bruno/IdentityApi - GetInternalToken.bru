@@ -1,0 +1,26 @@
+meta {
+  name: IdentityApi - GetInternalToken
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:7061/auth/token/internal
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {}
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("internal_token", res.body);
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="src/Data.MigrationService/Data.MigrationService.csproj" Id="a6f92c48-110b-4dd7-960c-d6ad4b48abe6" />
+  <Project Path="src/Data/Data.csproj" Id="0db267a5-7f8c-432b-b648-cc8eb700ccc5" />
+  <Project Path="src/DossierApi/DossierApi.csproj" Id="56f01835-ee33-4c5d-808a-65b98b8df648" />
+  <Project Path="src/IdentityApi/IdentityApi.csproj" Id="e29d02e4-af7d-4a4f-a9cb-db1ccd4ff22d" />
+  <Project Path="src/PatientWebsite/PatientWebsite.csproj" Id="2043b161-01a6-4cb0-b1da-e18190ee09b1" />
+  <Project Path="src/PseudoniemApi/PseudoniemApi.csproj" Id="68f3cd01-8e41-41e5-9a6a-bde1bf2fc6ea" />
+</Solution>

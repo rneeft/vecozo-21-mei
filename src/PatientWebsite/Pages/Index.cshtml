@@ -1,0 +1,73 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Medical Data Consent";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Medical Data Sharing Consent</h1>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-info mt-3">@Model.StatusMessage</div>
+}
+
+@if (Model.Patient is not null)
+{
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Welcome, @Model.Patient.FirstName @Model.Patient.LastName</h5>
+            <p class="card-text">
+                Current consent status:
+                <strong>
+                    @(Model.Patient.GavePermission switch
+                    {
+                        true => "Approved",
+                        false => "Declined",
+                        _ => "Not yet decided"
+                    })
+                </strong>
+            </p>
+
+            <p>Do you approve the sharing of your medical data?</p>
+
+            <form method="post" class="d-inline">
+                <button type="submit" name="approve" value="true" class="btn btn-success me-2">Approve</button>
+                <button type="submit" name="approve" value="false" class="btn btn-danger">Decline</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Companies with a dossier on you</h5>
+            @if (Model.CompaniesWithDossier.Count > 0)
+            {
+                <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var company in Model.CompaniesWithDossier)
+                        {
+                            <tr>
+                                <td>@company.CompanyName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted mt-2">No companies currently have a dossier on you.</p>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning mt-3">Patient record not found.</div>
+}

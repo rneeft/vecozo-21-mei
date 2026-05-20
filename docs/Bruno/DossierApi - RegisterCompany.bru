@@ -1,0 +1,29 @@
+meta {
+  name: DossierApi - RegisterCompany
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:7203/company/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "companyName": "{{new_company_name}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setEnvVar("company_id", res.body.companyId);
+    bru.setEnvVar("company_name", res.body.companyName);
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

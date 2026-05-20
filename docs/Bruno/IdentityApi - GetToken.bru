@@ -1,0 +1,28 @@
+meta {
+  name: IdentityApi - GetToken
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:7061/auth/token
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "CompanyId" : "{{company_id}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("company_token", res.body);
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

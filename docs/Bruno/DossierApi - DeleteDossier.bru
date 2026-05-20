@@ -1,0 +1,20 @@
+meta {
+  name: DossierApi - DeleteDossier
+  type: http
+  seq: 9
+}
+
+delete {
+  url: http://localhost:7203/dossier/{{bsn}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{company_token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

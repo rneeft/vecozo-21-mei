@@ -1,0 +1,20 @@
+meta {
+  name: DossierApi - CheckPatientPermission
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:7203/dossier/{{bsn}}/permission
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{company_token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

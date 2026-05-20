@@ -1,0 +1,91 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: ${SQL_PASSWORD}
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Express
+    ports:
+      - "2026:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" -No
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  migration:
+    build:
+      context: .
+      dockerfile: src/Data.MigrationService/Dockerfile
+    environment:
+      ConnectionStrings__OnlineToestemmingDb: "Server=sqlserver,1433;Database=OnlineToestemming;User Id=sa;Password=${SQL_PASSWORD};TrustServerCertificate=True"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    restart: "no"
+
+  identityapi:
+    build:
+      context: .
+      dockerfile: src/IdentityApi/Dockerfile
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__OnlineToestemmingDb: "Server=sqlserver,1433;Database=OnlineToestemming;User Id=sa;Password=${SQL_PASSWORD};TrustServerCertificate=True"
+      JwtSettings__SecretSigningKey: ${JWT_SECRET_KEY}
+    ports:
+      - "7061:8080"
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+
+  pseudoniemapi:
+    build:
+      context: .
+      dockerfile: src/PseudoniemApi/Dockerfile
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__OnlineToestemmingDb: "Server=sqlserver,1433;Database=OnlineToestemming;User Id=sa;Password=${SQL_PASSWORD};TrustServerCertificate=True"
+      JwtSettings__SecretSigningKey: ${JWT_SECRET_KEY}
+    ports:
+      - "7070:8080"
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+
+  dossierapi:
+    build:
+      context: .
+      dockerfile: src/DossierApi/Dockerfile
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__OnlineToestemmingDb: "Server=sqlserver,1433;Database=OnlineToestemming;User Id=sa;Password=${SQL_PASSWORD};TrustServerCertificate=True"
+      JwtSettings__SecretSigningKey: ${JWT_SECRET_KEY}
+      Services__IdentityApi: "http://identityapi:8080"
+      Services__PseudoniemApi: "http://pseudoniemapi:8080"
+    ports:
+      - "7203:8080"
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+
+  patientwebsite:
+    build:
+      context: .
+      dockerfile: src/PatientWebsite/Dockerfile
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__OnlineToestemmingDb: "Server=sqlserver,1433;Database=OnlineToestemming;User Id=sa;Password=${SQL_PASSWORD};TrustServerCertificate=True"
+      Services__IdentityApi: "http://identityapi:8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+      identityapi:
+        condition: service_started
+
+volumes:
+  sqldata:
