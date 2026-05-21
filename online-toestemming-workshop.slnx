@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Aspire/">
+    <Project Path="src/Aspire/Aspire.AppHost/Aspire.AppHost.csproj" Id="ff5b9bcb-5dcb-495d-bfcc-be9b85398ac9" />
+  </Folder>
   <Project Path="src/Data.MigrationService/Data.MigrationService.csproj" Id="a6f92c48-110b-4dd7-960c-d6ad4b48abe6" />
   <Project Path="src/Data/Data.csproj" Id="0db267a5-7f8c-432b-b648-cc8eb700ccc5" />
   <Project Path="src/DossierApi/DossierApi.csproj" Id="56f01835-ee33-4c5d-808a-65b98b8df648" />
